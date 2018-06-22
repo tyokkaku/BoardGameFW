@@ -1,4 +1,5 @@
 package BoardGame;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -21,10 +22,10 @@ public abstract class Player {
     /**
      * プレイヤーのコンストラクタ。
      *
-     * @param name プレイヤーの名前
+     * @param name      プレイヤーの名前
      * @param pieceType マルかバツかを登録する
      */
-    public Player(String name, String pieceType, Board board){
+    public Player(String name, String pieceType, Board board) {
         this.name_ = name;
         this.pieceType_ = pieceType;
         this.board_ = board;
@@ -35,7 +36,7 @@ public abstract class Player {
      *
      * @param board ボード
      */
-    public abstract void play(Board board);
+    public abstract void play(Board board, Player nextPlayer);
 
     /**
      * プレイヤーに駒を置く場所を入力してもらう
@@ -43,14 +44,14 @@ public abstract class Player {
      * @param board ボード
      * @return putPosition 多次元配列の番号
      */
-    protected int[] AskPutPosition(Board board){
+    protected int[] AskPutPosition(Board board, Player nextPlayer) {
         // 入力された数値を格納する配列
         int putPos[] = new int[2];
 
         int posX;
         int posY;
 
-        while(true){
+        while (true) {
             try {
                 // 入力を受け付ける
                 System.out.println("置く場所を入力してください");
@@ -66,15 +67,17 @@ public abstract class Player {
                 String line2 = reader.readLine();
                 posY = Integer.parseInt(line2);
 
-                if(!board.canPutPiece(posX, posY)) {
+                if (!board.canPutPiece(posX, posY, nextPlayer, this)) {
                     System.out.println("不正な入力値です。もう一度入力してください。");
                     System.out.println(this.name_ + "が" + this.pieceType_ + "でプレイします");
                     board.renderBoard();
                 } else {
                     break;
                 }
-            } catch(Exception e) {
-                System.out.println("不正な入力値です");
+            } catch (Exception e) {
+                System.out.println("不正な入力値です。もう一度入力してください。");
+                System.out.println(this.name_ + "が" + this.pieceType_ + "でプレイします");
+                board.renderBoard();
             }
         }
         // 二次元配列[Y軸][X軸]で代入する

@@ -36,16 +36,18 @@ public class TicTacToeBoard extends Board {
      *
      * @param x
      * @param y
+     * @param nextPlayer 次のプレイヤー
      */
-    public boolean canPutPiece(int x, int y){
+    public boolean canPutPiece(int x, int y, Player nextPlayer, Player player) {
         return (board_[y][x].equals(EmptyPoint));
     }
+
     /**
      * 勝敗を判定する。
      *
      * @return 勝利ならtrue
      */
-    public boolean judgeWin(Board board, Player player){
+    public boolean judgeWin(Board board, Player player) {
 
         boolean result = false;
 
@@ -99,21 +101,25 @@ public class TicTacToeBoard extends Board {
     }
 
     /**
-         * ゲームを開始する。
-         *
-         * @param board ボード
-         */
-        public void startGame (Board board){
-            int numberOfPlayer = players_.size();
-            for (int count = 0; 1 < players_.size(); count++) {
-                int currentPlayerNumber = count % numberOfPlayer; // 0 // 1 // 0
-                Player currentPlayer = players_.get(currentPlayerNumber);
-                currentPlayer.play(board);
-                if (count == board.boardSideLength * board.boardSideLength - 1) {
-                    board.renderBoard();
-                    System.out.println("引き分けです！");
-                    break;
-                }
+     * ゲームを開始する。
+     *
+     * @param board ボード
+     */
+    public void startGame(Board board) {
+        int numberOfPlayer = players_.size();
+        for (int count = 0; 1 < players_.size(); count++) {
+            int currentPlayerNumber = count % numberOfPlayer; // 0 // 1 // 0
+            Player currentPlayer = players_.get(currentPlayerNumber);
+
+            int nextPlayerNumber = (count + 1) % numberOfPlayer; // 1 // 0 // 1
+            Player nextPlayer = players_.get(nextPlayerNumber);
+
+            currentPlayer.play(board, nextPlayer);
+            if (count == board.boardSideLength * board.boardSideLength - 1) {
+                board.renderBoard();
+                System.out.println("引き分けです！");
+                break;
             }
         }
     }
+}

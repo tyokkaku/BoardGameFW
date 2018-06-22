@@ -6,22 +6,26 @@ public abstract class Board {
 
     // ボードのサイズ
     public int boardSideLength;
-    public static final int BoardMin =  0;
+    public static final int BoardMin = 0;
 
     // 盤の内外
     public static final String EmptyPoint = "  ";
     public static final String OutsideBoard = "OUT";
 
-    /** ボードを用意する */
+    /**
+     * ボードを用意する
+     */
     protected String[][] board_;
 
-    /** プレイヤーを格納するリスト */
+    /**
+     * プレイヤーを格納するリスト
+     */
     protected ArrayList<Player> players_ = new ArrayList<>();
 
     /**
      * ボードのコンストラクタ。
      */
-    public Board(int boardSideLength){
+    public Board(int boardSideLength) {
         this.boardSideLength = boardSideLength;
     }
 
@@ -32,7 +36,7 @@ public abstract class Board {
      * @param x
      * @param y
      */
-    public abstract boolean canPutPiece(int x, int y);
+    public abstract boolean canPutPiece(int x, int y, Player nextPlayer, Player player);
 
     /**
      * 盤面を初期化し、ゲームを準備する。
@@ -62,7 +66,7 @@ public abstract class Board {
      * @param y y軸
      * @return PieceType 駒の種類
      */
-    public String putPiece(int x, int y, String PieceType){
+    public String putPiece(int x, int y, String PieceType) {
         return board_[y][x] = PieceType;
     }
 
@@ -73,8 +77,8 @@ public abstract class Board {
      * @param y y軸の値
      * @return PieceType
      */
-    public String getPieceType(int x, int y){
-        if(x < BoardMin || y < BoardMin || x >= boardSideLength || y >= boardSideLength){
+    public String getPieceType(int x, int y) {
+        if (x < BoardMin || y < BoardMin || x >= boardSideLength || y >= boardSideLength) {
             return OutsideBoard;
         }
         return board_[y][x];
@@ -85,17 +89,17 @@ public abstract class Board {
      */
     public void renderBoard() {
         System.out.print("     " + 0);
-        for(int i = 1; i < boardSideLength; i++){
+        for (int i = 1; i < boardSideLength; i++) {
             System.out.print("    " + i);
         }
         System.out.println();
-        for(int h = 0; h < boardSideLength; h++){
+        for (int h = 0; h < boardSideLength; h++) {
             System.out.print(h);
-            for(int i = 0; i < boardSideLength; i++){
+            for (int i = 0; i < boardSideLength; i++) {
                 System.out.print(" | " + board_[h][i]);
             }
             System.out.println(" | ");
-            }
+        }
     }
 
     /**
@@ -104,7 +108,7 @@ public abstract class Board {
      * @param player1 先手のプレイヤー
      * @param player2 後手のプレイヤー
      */
-    public void registerPlayer(Player player1, Player player2){
+    public void registerPlayer(Player player1, Player player2) {
         players_.add(player1);
         players_.add(player2);
     }
@@ -113,9 +117,9 @@ public abstract class Board {
      * 勝敗を宣言する。
      *
      * @param player 勝利宣言したプレイヤー
-     * @param board 最終結果を表示するボード
+     * @param board  最終結果を表示するボード
      */
-    public void declareWin(Player player, Board board){
+    public void declareWin(Player player, Board board) {
         board.renderBoard();
         System.out.println(player.name_ + "の勝利です！");
         players_.remove(players_.indexOf(player));

@@ -19,6 +19,7 @@ public class OthelloBoard extends Board {
     private static final int Left = 6;
     private static final int TopLeftDiag = 7;
 
+
     /**
      * ボードのコンストラクタ。
      */
@@ -27,13 +28,21 @@ public class OthelloBoard extends Board {
     }
 
 
-    public String putPiece(int x, int y, String PieceType) {
-        return board_[y][x] = PieceType;reversePeace(x, y, PieceType, );
+    /**
+     * 駒を置く
+     *
+     * @param x x軸
+     * @param y y軸
+     * @param PieceType
+     * @param nextPlayer
+     */
+    public void putPiece(int x, int y, String PieceType, Player nextPlayer) {
+        board_[y][x] = PieceType;
+        reversePeace(x, y, PieceType,nextPlayer);
     }
 
-
     /**
-     * 駒をリバースする。
+     * 駒をリバースする
      *
      * @param x 置いたx座標
      * @param y 置いたy座標
@@ -46,102 +55,136 @@ public class OthelloBoard extends Board {
 
         reverseDirection = searchEnemyPiece_aroundOneMass(x, y, nextPlayer);
 
+        System.out.println(reverseDirection);
+
         for (int index = 0; index < reverseDirection.size(); index++) {
             // 上方向を探索して、空白を挟まないで、あるならtrueを返す
             if (reverseDirection.get(index) == Top) {
                 for (int i = 1; i < boardSideLength; i++) {
+                    if(getPieceType(x, y - i).equals(EmptyPoint)) {
+                        break;
+                    }
                     // 自分の駒が見つかったなら
                     if (getPieceType(x, y - i).equals(pieceType)) {
                         // 置いた場所から見つけた場所まで逆転させる
                         for (int h = 0; h < i; h++) {
                             board_[y - h][x] = pieceType;
                         }
+                        break;
                     }
                 }
             }
-                // 右斜め上方向を探索して、空白を挟まないで、あるならtrueを返す
-                if (reverseDirection.get(index) == TopRightDiag) {
-                    for (int i = 1; i < boardSideLength; i++) {
-                        // 自分の駒が見つかったなら逆転させる
-                        if (getPieceType(x + i, y - i).equals(pieceType)) {
+            // 右斜め上方向を探索して、空白を挟まないで、あるならtrueを返す
+             if (reverseDirection.get(index) == TopRightDiag) {
+                for (int i = 1; i < boardSideLength; i++) {
+                // 自分の駒が見つかったなら逆転させる
+                    if(getPieceType(x + i, y - i).equals(EmptyPoint)) {
+                        break;
+                    }
+                    if (getPieceType(x + i, y - i).equals(pieceType)) {
                             // 置いた場所から見つけた場所まで逆転させる
                             for (int h = 0; h < i; h++) {
                                 board_[y - h][x + h] = pieceType;
                             }
+                            break;
                         }
                     }
                 }
-                    // 右方向を探索して、空白を挟まないで、あるならtrueを返す
-                    if (reverseDirection.get(index) == Right) {
-                        for (int i = 1; i < boardSideLength; i++) {
-                            // 自分の駒が見つかったなら逆転させる
-                            if (getPieceType(x + i, y).equals(pieceType)) {
-                                // 置いた場所から見つけた場所まで逆転させる
-                                for (int h = 0; h < i; h++) {
-                                    board_[y][x + h] = pieceType;
-                                }
-                            }
-                        }
+                // 右方向を探索して、空白を挟まないで、あるならtrueを返す
+            if (reverseDirection.get(index) == Right) {
+                for (int i = 1; i < boardSideLength; i++) {
+                    if(getPieceType(x + i, y).equals(EmptyPoint)) {
+                        break;
                     }
-                    // 右斜め下方向を探索して、空白を挟まないで、あるならtrueを返す
-                    if (reverseDirection.get(index) == BottomRightDiag) {
-                        for (int i = 1; i < boardSideLength; i++) {
-                            // 自分の駒が見つかったなら逆転させる
-                            if (getPieceType(x + i, y + i).equals(pieceType)) {
-                                // 置いた場所から見つけた場所まで逆転させる
-                                for (int h = 0; h < i; h++) {
-                                    board_[y + h][x + h] = pieceType;
-                                }
-                            }
+                    // 自分の駒が見つかったなら逆転させる
+                    if (getPieceType(x + i, y).equals(pieceType)) {
+                        // 置いた場所から見つけた場所まで逆転させる
+                        for (int h = 0; h < i; h++) {
+                            board_[y][x + h] = pieceType;
                         }
+                        break;
                     }
-                    // 下方向を探索して、空白を挟まないで、あるならtrueを返す
-                    if (reverseDirection.get(index) == Bottom) {
-                        for (int i = 1; i < boardSideLength; i++) {
-                            // 自分の駒が見つかったなら逆転させる
-                            if (getPieceType(x, y + i).equals(pieceType)) {
-                                // 置いた場所から見つけた場所まで逆転させる
-                                for (int h = 0; h < i; h++) {
-                                    board_[y + h][x] = pieceType;
-                                }
-                            }
-                        }
+                }
+            }
+            // 右斜め下方向を探索して、空白を挟まないで、あるならtrueを返す
+            if (reverseDirection.get(index) == BottomRightDiag) {
+                for (int i = 1; i < boardSideLength; i++) {
+                    if(getPieceType(x + i, y + i).equals(EmptyPoint)) {
+                        break;
                     }
-                    // 左下方向を探索して、空白を挟まないで、あるならtrueを返す
-                    if (reverseDirection.get(index) == BottomLeftDiag) {
-                        for (int i = 1; i < boardSideLength; i++) {
-                            // 自分の駒が見つかったなら逆転させる
-                            if (getPieceType(x - i, y + i).equals(pieceType)) {
-                                // 置いた場所から見つけた場所まで逆転させる
-                                for (int h = 0; h < i; h++) {
-                                    board_[y + h][x - h] = pieceType;
-                                }
+                    // 自分の駒が見つかったなら逆転させる
+                    if (getPieceType(x + i, y + i).equals(pieceType)) {
+                        // 置いた場所から見つけた場所まで逆転させる
+                        for (int h = 0; h < i; h++) {
+                            board_[y + h][x + h] = pieceType;
                             }
-                        }
+                        break;
                     }
-                    // 左方向を探索して、空白を挟まないで、あるならtrueを返す
-                    if (reverseDirection.get(index) == Left) {
-                        for (int i = 1; i < boardSideLength; i++) {
-                            // 自分の駒が見つかったなら逆転させる
-                            if (getPieceType(x - i, y).equals(pieceType)) {
-                                // 置いた場所から見つけた場所まで逆転させる
-                                for (int h = 0; h < i; h++) {
-                                    board_[y][x - h] = pieceType;
-                                }
-                            }
-                        }
+                }
+            }
+            // 下方向を探索して、空白を挟まないで、あるならtrueを返す
+            if (reverseDirection.get(index) == Bottom) {
+                for (int i = 1; i < boardSideLength; i++) {
+                    if(getPieceType(x, y + i).equals(EmptyPoint)) {
+                        break;
                     }
-                    // 左上方向を探索して、空白を挟まないで、あるならtrueを返す
-                    if (reverseDirection.get(index) == TopLeftDiag) {
-                        for (int i = 1; i < boardSideLength; i++) {
-                            // 自分の駒が見つかったなら逆転させる
-                            if (getPieceType(x - i, y - i).equals(pieceType)) {
-                                // 置いた場所から見つけた場所まで逆転させる
-                                for (int h = 0; h < i; h++) {
-                                    board_[y - h][x - h] = pieceType;
-                                }
+                    // 自分の駒が見つかったなら逆転させる
+                    if (getPieceType(x, y + i).equals(pieceType)) {
+                        // 置いた場所から見つけた場所まで逆転させる
+                        for (int h = 0; h < i; h++) {
+                            board_[y + h][x] = pieceType;
                             }
-                        }
+                        break;
+                    }
+                }
+            }
+            // 左下方向を探索して、空白を挟まないで、あるならtrueを返す
+            if (reverseDirection.get(index) == BottomLeftDiag) {
+                for (int i = 1; i < boardSideLength; i++) {
+                    if(getPieceType(x - i, y + i).equals(EmptyPoint)) {
+                        break;
+                    }
+                    // 自分の駒が見つかったなら逆転させる
+                    if (getPieceType(x - i, y + i).equals(pieceType)) {
+                        // 置いた場所から見つけた場所まで逆転させる
+                        for (int h = 0; h < i; h++) {
+                            board_[y + h][x - h] = pieceType;
+                            }
+                        break;
+                    }
+                }
+            }
+            // 左方向を探索して、空白を挟まないで、あるならtrueを返す
+            if (reverseDirection.get(index) == Left) {
+                for (int i = 1; i < boardSideLength; i++) {
+                    if(getPieceType(x - i, y).equals(EmptyPoint)) {
+                        break;
+                    }
+                    // 自分の駒が見つかったなら逆転させる
+                    if (getPieceType(x - i, y).equals(pieceType)) {
+                        // 置いた場所から見つけた場所まで逆転させる
+                        for (int h = 0; h < i; h++) {
+                            board_[y][x - h] = pieceType;
+                            }
+                        break;
+                    }
+                }
+            }
+            // 左上方向を探索して、空白を挟まないで、あるならtrueを返す
+            if (reverseDirection.get(index) == TopLeftDiag) {
+                for (int i = 1; i < boardSideLength; i++) {
+                    if(getPieceType(x - i, y - i).equals(EmptyPoint)) {
+                        break;
+                    }
+                    // 自分の駒が見つかったなら逆転させる
+                    if (getPieceType(x - i, y - i).equals(pieceType)) {
+                        // 置いた場所から見つけた場所まで逆転させる
+                        for (int h = 0; h < i; h++) {
+                            board_[y - h][x - h] = pieceType;
+                            }
+                        break;
+                    }
+                }
             }
         }
     }
@@ -194,12 +237,11 @@ public class OthelloBoard extends Board {
         // 上方向を探索して、空白を挟まないで、あるならtrueを返す
         if(direction == Top){
             for(int i = 1; i < boardSideLength; i++){
-                // 空白を挟んでたら探索を中止する
                 if(getPieceType(x, y - i).equals(EmptyPoint)){
+//                    System.out.println("上方向に空白を発見：" + x + "," + (y -i));
                     break;
-                }
-                // 自分の駒が見つかったなら
-                if(getPieceType(x, y - i).equals(player.pieceType_)){
+                } else if(getPieceType(x, y - i).equals(player.pieceType_)){
+//                    System.out.println("上方向に自分の駒を発見：" + x + "," + (y -i));
                     result = true;
                 }
             }
@@ -207,12 +249,11 @@ public class OthelloBoard extends Board {
         // 右斜め上方向を探索して、空白を挟まないで、あるならtrueを返す
         if(direction == TopRightDiag){
             for(int i = 1; i < boardSideLength; i++){
-                // 空白を挟んでたら探索を中止する
                 if(getPieceType(x + i, y - i).equals(EmptyPoint)){
+//                    System.out.println("右斜め上方向に空白を発見：" + (x + i) + "," + (y - i));
                     break;
-                }
-                // 自分の駒が見つかったなら逆転させる
-                if(getPieceType(x + i, y - i).equals(player.pieceType_)){
+                } else if(getPieceType(x + i, y - i).equals(player.pieceType_)){
+//                    System.out.println("右斜め上方向に自分の駒を発見：" + (x + i) + "," + (y - i));
                     result = true;
                 }
             }
@@ -220,12 +261,11 @@ public class OthelloBoard extends Board {
         // 右方向を探索して、空白を挟まないで、あるならtrueを返す
         if(direction == Right){
             for(int i = 1; i < boardSideLength; i++){
-                // 空白を挟んでたら探索を中止する
                 if(getPieceType(x + i, y).equals(EmptyPoint)){
+//                    System.out.println("右方向に空白を発見：" + (x + i) + "," + (y));
                     break;
-                }
-                // 自分の駒が見つかったなら逆転させる
-                if(getPieceType(x + i, y).equals(player.pieceType_)){
+                } else if(getPieceType(x + i, y).equals(player.pieceType_)){
+//                    System.out.println("右方向に自分の駒を発見：" + (x + i) + "," + (y));
                     result = true;
                 }
             }
@@ -233,12 +273,11 @@ public class OthelloBoard extends Board {
         // 右斜め下方向を探索して、空白を挟まないで、あるならtrueを返す
         if(direction == BottomRightDiag){
             for(int i = 1; i < boardSideLength; i++){
-                // 空白を挟んでたら探索を中止する
                 if(getPieceType(x + i, y + i).equals(EmptyPoint)){
+//                    System.out.println("右斜め下方向に空白を発見：" + (x + i) + "," + (y + i));
                     break;
-                }
-                // 自分の駒が見つかったなら逆転させる
-                if(getPieceType(x + i, y +  i).equals(player.pieceType_)){
+                } else if(getPieceType(x + i, y +  i).equals(player.pieceType_)){
+//                    System.out.println("右斜め下方向に自分の駒を発見：" + (x + i) + "," + (y + i));
                     result = true;
                 }
             }
@@ -246,12 +285,12 @@ public class OthelloBoard extends Board {
         // 下方向を探索して、空白を挟まないで、あるならtrueを返す
         if(direction == Bottom){
             for(int i = 1; i < boardSideLength; i++){
-                // 空白を挟んでたら探索を中止する
                 if(getPieceType(x, y + i).equals(EmptyPoint)){
+//                    System.out.println("下方向に空白を発見：" + x + "," + (y + i));
                     break;
-                }
-                // 自分の駒が見つかったなら逆転させる
-                if(getPieceType(x, y + i).equals(player.pieceType_)){
+                } else if(getPieceType(x, y + i).equals(player.pieceType_)){
+//                    System.out.println("下方向に自分の駒を発見：" + x + "," + (y + i));
+
                     result = true;
                 }
             }
@@ -259,27 +298,23 @@ public class OthelloBoard extends Board {
         // 左下方向を探索して、空白を挟まないで、あるならtrueを返す
         if(direction == BottomLeftDiag){
             for(int i = 1; i < boardSideLength; i++){
-                // 空白を挟んでたら探索を中止する
                 if(getPieceType(x - i, y + i).equals(EmptyPoint)){
+//                    System.out.println("左斜め下方向に空白を発見：" + (x -i) + "," + (y + i));
                     break;
-                }
-                // 自分の駒が見つかったなら逆転させる
-                if(getPieceType(x - i, y +  i).equals(player.pieceType_)){
+                } else if(getPieceType(x - i, y +  i).equals(player.pieceType_)){
+//                    System.out.println("左斜め下方向に自分の駒を発見：" + (x -i) + "," + (y + i));
                     result = true;
                 }
             }
         }
         // 左方向を探索して、空白を挟まないで、あるならtrueを返す
         if(direction == Left){
-            System.out.println(player.name_);
-            System.out.println(player.pieceType_);
             for(int i = 1; i < boardSideLength; i++){
-                // 空白を挟んでたら探索を中止する
                 if(getPieceType(x - i, y).equals(EmptyPoint)){
+//                    System.out.println("左方向に空白を発見：" + (x -i) + "," + y);
                     break;
-                }
-                // 自分の駒が見つかったなら逆転させる
-                if(getPieceType(x - i, y).equals(player.pieceType_)){
+                } else if(getPieceType(x - i, y).equals(player.pieceType_)){
+//                    System.out.println("左方向に自分の駒を発見：" + (x -i) + "," + y);
                     result = true;
                 }
             }
@@ -287,12 +322,11 @@ public class OthelloBoard extends Board {
         // 左上方向を探索して、空白を挟まないで、あるならtrueを返す
         if(direction == TopLeftDiag){
             for(int i = 1; i < boardSideLength; i++){
-                // 空白を挟んでたら探索を中止する
                 if(getPieceType(x - i, y - i).equals(EmptyPoint)){
+//                    System.out.println("左斜め上方向に空白を発見：" + (x -i) + "," + (y -i));
                     break;
-                }
-                // 自分の駒が見つかったなら逆転させる
-                if(getPieceType(x - i, y - i).equals(player.pieceType_)){
+                } else if(getPieceType(x - i, y - i).equals(player.pieceType_)){
+//                    System.out.println("左斜め上方向に自分の駒を発見：" + (x - i) + "," + (y -i));
                     result = true;
                 }
             }
@@ -363,7 +397,7 @@ public class OthelloBoard extends Board {
                 }
             }
         }
-        System.out.println("周囲1マスの結果：" + candidate);
+//        System.out.println("周囲1マスの結果：" + candidate);
         return candidate;
     }
 
@@ -408,9 +442,39 @@ public class OthelloBoard extends Board {
     /**
      * 勝利条件を満たしているか判定する。
      *
+     * @param board
+     * @param player
+     * @param nextPlayer
      * @return 勝利ならtrue
      */
-    public boolean judgeWin(Board board, Player player){
+    public boolean judgeWin(Board board, Player player, Player nextPlayer){
+        int currentPlayerPieceCount = 0;
+        int nextPlayerPieceCount = 0;
+
+        for(int i =0; i < boardSideLength; i++){
+            for(int h =0; h < boardSideLength; h++){
+                if(board_[i][h] == player.pieceType_){
+                    currentPlayerPieceCount++;
+                } else if(board_[i][h] == nextPlayer.pieceType_){
+                    nextPlayerPieceCount++;
+                }
+            }
+        }
+
+        if(currentPlayerPieceCount == nextPlayerPieceCount){
+            System.out.println(player.pieceType_ + "が" + currentPlayerPieceCount + "個、" + nextPlayer.pieceType_ + "が" + nextPlayerPieceCount + "で、引き分けです！");
+        } else if(currentPlayerPieceCount > nextPlayerPieceCount){
+            System.out.println(player.pieceType_ + "が" + currentPlayerPieceCount + "個、" + nextPlayer.pieceType_ + "が" + nextPlayerPieceCount + "で、" + player.name_ + "の勝利です！");
+        } else {
+            System.out.println(player.pieceType_ + "が" + currentPlayerPieceCount + "個、" + nextPlayer.pieceType_ + "が" + nextPlayerPieceCount + "で、" + nextPlayer.name_ + "の勝利です！");
+        }
+
+        try{
+            players_.remove(0);
+            players_.remove(1);
+        } catch(Exception e){
+            System.out.println("ゲーム終了です");
+        }
         return true;
     }
 }

@@ -47,7 +47,7 @@ public class TicTacToeBoard extends Board {
      *
      * @return 勝利ならtrue
      */
-    public boolean judgeWin(Board board, Player player) {
+    public boolean judgeWin(Board board, Player player, Player nextPlayer) {
 
         boolean result = false;
 

@@ -14,8 +14,8 @@ public class Othello {
         Board board = new OthelloBoard(8);
 
         // プレイヤーの生成
-        Player Tyokkaku = new OthelloPlayer("Tyokkaku", WhitePiece, board);
-        Player Heikou = new OthelloPlayer("Heikou", BlackPiece, board);
+        Player Tyokkaku = new OthelloPlayer("Tyokkaku", BlackPiece, board);
+        Player Heikou = new OthelloPlayer("Heikou", WhitePiece, board);
 
         // プレイヤーの登録
         board.registerPlayer(Tyokkaku, Heikou);

@@ -28,10 +28,10 @@ public class TicTacToePlayer extends Player{
 
         int putPos[] = AskPutPosition(board, nextPlayer);
 
-        board.putPiece(putPos[X_axis],putPos[Y_axis],this.pieceType_);
+        board.putPiece(putPos[X_axis],putPos[Y_axis],this.pieceType_, nextPlayer);
         System.out.println(this.name_ + "が、X軸：" + putPos[X_axis] + ",Y軸：" + putPos[Y_axis] + "に置きました");
 
-        if(board.judgeWin(board, this)){
+        if(board.judgeWin(board, this, nextPlayer)){
             board.declareWin(this, board);
         }
     }

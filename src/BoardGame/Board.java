@@ -57,17 +57,18 @@ public abstract class Board {
      *
      * @return 勝利ならtrue
      */
-    public abstract boolean judgeWin(Board board, Player player);
+    public abstract boolean judgeWin(Board board, Player player, Player nextPlayer);
 
     /**
      * 盤面に持ち駒を置く。
      *
      * @param x x軸
      * @param y y軸
-     * @return PieceType 駒の種類
+     * @param PieceType
+     * @param nextPlayer
      */
-    public String putPiece(int x, int y, String PieceType) {
-        return board_[y][x] = PieceType;
+    public void putPiece(int x, int y, String PieceType, Player nextPlayer) {
+        board_[y][x] = PieceType;
     }
 
     /**
